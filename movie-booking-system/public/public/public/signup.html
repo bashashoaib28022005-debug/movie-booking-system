@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Signup | ShoNova</title>
+<style>
+body{
+    font-family: Arial;
+    background:#0A0A0B;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+.box{
+    background:#1a1a1c;
+    padding:30px;
+    border-radius:10px;
+    width:300px;
+}
+input{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+}
+button{
+    width:100%;
+    padding:10px;
+    background:#FF0032;
+    border:none;
+    color:white;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h2>Signup</h2>
+
+<input id="name" placeholder="Name">
+<input id="mobile" placeholder="Mobile">
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+
+<button onclick="signup()">Signup</button>
+
+</div>
+
+<script>
+async function signup(){
+
+const res = await fetch("/signup",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+name:name.value,
+mobile:mobile.value,
+email:email.value,
+password:password.value
+})
+});
+
+const data = await res.json();
+
+if(data.success){
+alert("Signup success");
+window.location="login.html";
+}else{
+alert(data.message);
+}
+
+}
+</script>
+
+</body>
+</html>

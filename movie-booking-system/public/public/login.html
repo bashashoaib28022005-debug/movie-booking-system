@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login | ShoNova</title>
+<style>
+body{
+    font-family: Arial;
+    background:#0A0A0B;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+.box{
+    background:#1a1a1c;
+    padding:30px;
+    border-radius:10px;
+    width:300px;
+}
+input{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border:none;
+    border-radius:5px;
+}
+button{
+    width:100%;
+    padding:10px;
+    background:#FF0032;
+    border:none;
+    color:white;
+    font-weight:bold;
+}
+a{color:#FF0032;}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h2>Login</h2>
+
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+<p>Don't have account? <a href="signup.html">Signup</a></p>
+</div>
+
+<script>
+async function login(){
+
+const res = await fetch("/login",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+email:email.value,
+password:password.value
+})
+});
+
+const data = await res.json();
+
+if(data.success){
+alert("Login success");
+window.location="movies.html";
+}else{
+alert(data.message);
+}
+
+}
+</script>
+
+</body>
+</html>

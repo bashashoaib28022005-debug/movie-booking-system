@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Movies | ShoNova</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family:'Plus Jakarta Sans',sans-serif; background:#0A0A0B; color:white; margin:0; }
+        nav{background:var(--secondary);padding:10px 20px;display:flex;justify-content:space-between;align-items:center;}
+        .movies-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:20px;padding:20px;}
+        .movie-card{background:var(--secondary);border-radius:12px;overflow:hidden;cursor:pointer;transition:0.3s;}
+        .movie-card img{width:100%;display:block;}
+        .movie-card h4{margin:10px; font-size:1rem; text-align:center;}
+        .movie-card:hover{transform:scale(1.05);}
+    </style>
+</head>
+<body>
+    <nav>
+        <div><a href="/movies.html" style="color:white;text-decoration:none;font-size:1.4rem;font-weight:800;">ShoNova</a></div>
+        <div id="navLinks"></div>
+    </nav>
+
+    <div class="movies-grid" id="moviesGrid"></div>
+
+    <script>
+        async function updateNav(user){
+            const n=document.getElementById('navLinks');
+            if(user){
+                n.innerHTML = `<span style="color:#fff;margin-right:10px">Hi, ${user.name}</span><a href="#" id="logoutBtn" style="color:#fff;">Logout</a>`;
+                document.getElementById('logoutBtn').onclick = ()=>fetch('/logout').then(()=>location.reload());
+            } else {
+                n.innerHTML = `<a href="/login.html" style="color:#fff;margin-right:15px;">Login</a><a href="/signup.html" style="color:#fff;">Sign&nbsp;Up</a>`;
+            }
+        }
+
+        async function loadMovies(){
+            const res=await fetch('/movies');
+            const list=await res.json();
+            const grid=document.getElementById('moviesGrid');
+            list.forEach(m=>{
+                const card=document.createElement('div');
+                card.className='movie-card';
+                card.innerHTML=`<img src="${m.poster}" alt="${m.title}"><h4>${m.title}</h4>`;
+                card.onclick=()=>{ location.href=`/index.html?movie=${m.id}`; };
+                grid.appendChild(card);
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', async ()=>{
+            loadMovies();
+            const me=await fetch('/me',{credentials:'include'});
+            const {user}=await me.json();
+            updateNav(user);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up | ShoNova</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background:#0A0A0B; color:#1a1a1c; font-family:'Plus Jakarta Sans',sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; }
+        .auth-container { width:360px; }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="modal">
+            <div class="auth-tabs">
+                <div class="auth-tab" id="tab-login" onclick="location.href='login.html'">Login</div>
+                <div class="auth-tab active" id="tab-signup">Sign Up</div>
+            </div>
+            <div class="auth-body">
+                <div class="input-group">
+                    <input type="text" id="name" placeholder="Full Name">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="email" placeholder="Email">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="mobile" placeholder="Mobile">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Password">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <button class="auth-submit" onclick="doSignup()">Create account</button>
+                <p class="auth-footer">Already have an account? <a class="auth-footer-link" href="login.html">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function doSignup(){
+            const name=document.getElementById('name').value;
+            const email=document.getElementById('email').value;
+            const mobile=document.getElementById('mobile').value;
+            const password=document.getElementById('password').value;
+            const res=await fetch('/signup',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,mobile,password})});
+            const data=await res.json();
+            if(data.success){
+                location.href='/movies.html';
+            } else {
+                alert(data.message||'signup failed');
+            }
+        }
+    </script>
+</body>
+</html>

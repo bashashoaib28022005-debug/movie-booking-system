@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Select Seats | ShoNova</title>
+<style>
+body{ font-family:'Plus Jakarta Sans',sans-serif; background:#0A0A0B; color:white; margin:0; }
+.navbar{ background:#1a1a1c; padding:15px 30px; font-size:22px; font-weight:800; border-bottom: 1px solid #333; }
+.container{ padding:30px; text-align:center; }
+
+/* --- PROFESSIONAL SCREEN --- */
+.screen-container { margin: 40px auto; width: 80%; max-width: 600px; }
+.screen-curve { 
+    height: 7px; 
+    width: 100%; 
+    background: #51E1ED; 
+    border-radius: 50%; 
+    box-shadow: 0 10px 20px rgba(81, 225, 237, 0.5);
+    margin-bottom: 10px;
+}
+.screen-text { color: #94a3b8; font-size: 12px; letter-spacing: 5px; font-weight: 600; }
+
+/* --- SEAT GRID SYSTEM --- */
+.booking-layout { 
+    display: inline-block; 
+    padding: 20px; 
+    background: #111; 
+    border-radius: 20px;
+    margin-bottom: 40px;
+}
+#seat-grid { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+    align-items: center; 
+}
+.tier-label { 
+    font-size: 11px; 
+    color: #94a3b8; 
+    text-transform: uppercase; 
+    letter-spacing: 2px; 
+    margin: 15px 0 5px 0;
+    font-weight: 700;
+    border-top: 1px dashed #333;
+    padding-top: 10px;
+    width: 100%;
+}
+.row { display: flex; align-items: center; gap: 10px; }
+.row-label { width: 30px; font-size: 14px; color: #64748b; font-weight: 700; }
+
+.seat-container { display: flex; gap: 8px; }
+.gap { width: 40px; } 
+
+.seat { 
+    width: 30px; height: 30px; 
+    border: 1px solid #00C851; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    font-size: 10px; 
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.2s;
+    color: #00C851;
+}
+.seat:hover { background: rgba(0, 200, 81, 0.2); }
+.seat.selected { background: #00C851 !important; color: white !important; box-shadow: 0 0 15px rgba(0, 200, 81, 0.4); }
+.seat.occupied { background: #334155; border-color: #334155; color: #94a3b8; cursor: not-allowed; }
+
+/* --- LEGEND --- */
+.legend { display: flex; justify-content: center; gap: 30px; margin: 20px 0; font-size: 13px; color: #94a3b8; }
+.legend-item { display: flex; align-items: center; gap: 8px; }
+.box { width: 18px; height: 18px; border-radius: 3px; }
+
+/* --- SNACKS & OTHERS --- */
+.category-title { margin-top: 60px; color: #FF0032; border-bottom: 1px solid #333; padding-bottom: 15px; font-size: 26px; font-weight: 800; text-align: left; max-width: 850px; margin-left: auto; margin-right: auto;}
+.snacks { margin-top: 30px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 850px; margin-left: auto; margin-right: auto; padding-bottom: 30px;}
+.snack-card { background: #1a1a1c; padding: 15px; border-radius: 15px; border: 1px solid #333; display: flex; flex-direction: column; align-items: center; justify-content: space-between;}
+.snack-card img { width: 100%; height: 110px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; }
+.snack-info { font-size: 14px; margin-bottom: 10px; font-weight: 600; text-align: center;}
+.total { margin:50px 0; font-size:24px; font-weight: bold; position: sticky; bottom: 0; background: rgba(10, 10, 11, 0.95); backdrop-filter: blur(10px); padding: 25px; border-top: 2px solid #FF0032; z-index: 100; }
+.book-btn { padding:15px 50px; background:#FF0032; border:none; border-radius:10px; color:white; font-size:20px; font-weight: 800; cursor:pointer; }
+.modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); display:none; justify-content:center; align-items:center; z-index: 2000; }
+.modal-content { background:#1a1a1c; padding:40px; border-radius:20px; width:320px; text-align:center; border: 1px solid #333; }
+.payment-option { margin:15px 0; padding:15px; background:#2a2a2a; cursor:pointer; border-radius:10px; }
+@media (max-width: 768px) { .snacks { grid-template-columns: repeat(2, 1fr); } .gap { width: 15px; } }
+</style>
+</head>
+<body>
+
+<div class="navbar">ShoNova Seats</div>
+
+<div class="container">
+    <h3 id="selected-summary" style="color: #00ff84; margin-bottom: 20px;"></h3>
+
+    <div class="booking-layout">
+        <div class="screen-container">
+            <div class="screen-curve"></div>
+            <div class="screen-text">SCREEN</div>
+        </div>
+
+        <div id="seat-grid"></div>
+
+        <div class="legend">
+            <div class="legend-item"><div class="box" style="border:1px solid #00C851"></div> Available</div>
+            <div class="legend-item"><div class="box" style="background:#00C851"></div> Selected</div>
+            <div class="legend-item"><div class="box" style="background:#334155"></div> Occupied</div>
+        </div>
+    </div>
+
+    <h3 class="category-title">Refreshing Juices (8 Varieties)</h3>
+    <div class="snacks">
+        <div class="snack-card"><img src="images/apple.jpg"><div class="snack-info">Apple Juice ₹120</div><input type="checkbox" value="120" class="snack"></div>
+        <div class="snack-card"><img src="images/orange.jpg"><div class="snack-info">Orange Juice ₹110</div><input type="checkbox" value="110" class="snack"></div>
+        <div class="snack-card"><img src="images/mango.jpg"><div class="snack-info">Mango Pulp ₹130</div><input type="checkbox" value="130" class="snack"></div>
+        <div class="snack-card"><img src="images/watermelon.jpg"><div class="snack-info">Watermelon ₹90</div><input type="checkbox" value="90" class="snack"></div>
+        <div class="snack-card"><img src="images/grape.jpg"><div class="snack-info">Black Grape ₹100</div><input type="checkbox" value="100" class="snack"></div>
+        <div class="snack-card"><img src="images/pineapple.jpg"><div class="snack-info">Pineapple ₹110</div><input type="checkbox" value="110" class="snack"></div>
+        <div class="snack-card"><img src="images/lemon.jpg"><div class="snack-info">Fresh Lime Soda ₹80</div><input type="checkbox" value="80" class="snack"></div>
+        <div class="snack-card"><img src="images/mixed-fruit.jpg"><div class="snack-info">Mixed Fruit ₹140</div><input type="checkbox" value="140" class="snack"></div>
+    </div>
+
+    <h3 class="category-title">Hot & Cold Coffee (8 Varieties)</h3>
+    <div class="snacks">
+        <div class="snack-card"><img src="images/espresso.jpg"><div class="snack-info">Espresso ₹90</div><input type="checkbox" value="90" class="snack"></div>
+        <div class="snack-card"><img src="images/cappuccino.jpg"><div class="snack-info">Cappuccino ₹140</div><input type="checkbox" value="140" class="snack"></div>
+        <div class="snack-card"><img src="images/latte.jpg"><div class="snack-info">Cafe Latte ₹150</div><input type="checkbox" value="150" class="snack"></div>
+        <div class="snack-card"><img src="images/cold.jpg"><div class="snack-info">Classic Cold Coffee ₹160</div><input type="checkbox" value="160" class="snack"></div>
+        <div class="snack-card"><img src="images/mocha.jpg"><div class="snack-info">Choco Mocha ₹170</div><input type="checkbox" value="170" class="snack"></div>
+        <div class="snack-card"><img src="images/americano.jpg"><div class="snack-info">Black Americano ₹110</div><input type="checkbox" value="110" class="snack"></div>
+        <div class="snack-card"><img src="images/irish.jpg"><div class="snack-info">Irish Coffee ₹180</div><input type="checkbox" value="180" class="snack"></div>
+        <div class="snack-card"><img src="images/frappe.jpg"><div class="snack-info">Hazelnut Frappe ₹190</div><input type="checkbox" value="190" class="snack"></div>
+    </div>
+
+    <h3 class="category-title">Veg & Non-Veg Burgers (8 Varieties)</h3>
+    <div class="snacks">
+        <div class="snack-card"><img src="images/classic-veg.jpg"><div class="snack-info">Classic Veg Burger ₹120</div><input type="checkbox" value="120" class="snack"></div>
+        <div class="snack-card"><img src="images/paneer.jpg"><div class="snack-info">Paneer Tikka Burger ₹160</div><input type="checkbox" value="160" class="snack"></div>
+        <div class="snack-card"><img src="images/mexican-veg.jpg"><div class="snack-info">Mexican Veggie ₹140</div><input type="checkbox" value="140" class="snack"></div>
+        <div class="snack-card"><img src="images/chicken-classic.jpg"><div class="snack-info">Classic Chicken ₹180</div><input type="checkbox" value="180" class="snack"></div>
+        <div class="snack-card"><img src="images/crispy-chicken.jpg"><div class="snack-info">Crispy Chicken Zinger ₹210</div><input type="checkbox" value="210" class="snack"></div>
+        <div class="snack-card"><img src="images/bbq-chicken.jpg"><div class="snack-info">BBQ Chicken Burger ₹230</div><input type="checkbox" value="230" class="snack"></div>
+        <div class="snack-card"><img src="images/double-chicken.jpg"><div class="snack-info">Monster Chicken Double ₹280</div><input type="checkbox" value="280" class="snack"></div>
+        <div class="snack-card"><img src="images/fish-burger.jpg"><div class="snack-info">Crispy Fish Burger ₹250</div><input type="checkbox" value="250" class="snack"></div>
+    </div>
+
+    <div class="total">
+        Total ₹<span id="total">0</span><br><br>
+        <button class="book-btn" onclick="openPayment()">Confirm Booking</button>
+    </div>
+</div>
+
+<div class="modal" id="paymentModal"><div class="modal-content"><h3 style="color:#FF0032">Payment Method</h3><div class="payment-option" onclick="processPayment('UPI')">UPI</div><div class="payment-option" onclick="processPayment('Card')">Debit/Credit Card</div><div class="payment-option" onclick="processPayment('NetBanking')">Net Banking</div></div></div>
+
+<script>
+const summary = document.getElementById("selected-summary");
+summary.innerText = `${localStorage.getItem("movie")} | ${localStorage.getItem("theatre")} | ${localStorage.getItem("showtime")} | ${localStorage.getItem("date")}`;
+
+let selectedSeats = [];
+const seatGrid = document.getElementById("seat-grid");
+
+const rowsData = [
+    { letter: 'J', price: 60, tier: 'BUDGET' },
+    { letter: 'I', price: 60, tier: '' },
+    { letter: 'H', price: 190, tier: 'ELITE' },
+    { letter: 'G', price: 190, tier: '' },
+    { letter: 'F', price: 190, tier: '' },
+    { letter: 'E', price: 190, tier: '' },
+    { letter: 'D', price: 190, tier: '' },
+    { letter: 'C', price: 190, tier: '' },
+    { letter: 'B', price: 250, tier: 'PREMIUM' },
+    { letter: 'A', price: 250, tier: '' }
+];
+
+rowsData.forEach((row) => {
+    if(row.tier !== "") {
+        const tierLabel = document.createElement("div");
+        tierLabel.className = "tier-label";
+        tierLabel.innerText = `${row.tier} - ₹${row.price}`;
+        seatGrid.appendChild(tierLabel);
+    }
+
+    const rowDiv = document.createElement("div");
+    rowDiv.className = "row";
+    
+    const label = document.createElement("div");
+    label.className = "row-label";
+    label.innerText = row.letter;
+    rowDiv.appendChild(label);
+
+    const seatContainer = document.createElement("div");
+    seatContainer.className = "seat-container";
+
+    for(let i=1; i<=14; i++) {
+        if(i === 8) {
+            const gap = document.createElement("div");
+            gap.className = "gap";
+            seatContainer.appendChild(gap);
+        }
+
+        const seat = document.createElement("div");
+        seat.className = "seat";
+        seat.innerText = i;
+        
+        if(Math.random() < 0.15) {
+            seat.classList.add("occupied");
+        } else {
+            seat.onclick = function() {
+                seat.classList.toggle("selected");
+                const seatObj = { id: row.letter + i, price: row.price };
+                
+                const index = selectedSeats.findIndex(s => s.id === seatObj.id);
+                if(index > -1) selectedSeats.splice(index, 1);
+                else selectedSeats.push(seatObj);
+                
+                updateTotal();
+            };
+        }
+        seatContainer.appendChild(seat);
+    }
+    rowDiv.appendChild(seatContainer);
+    seatGrid.appendChild(rowDiv);
+});
+
+document.addEventListener('change', function(e) { if(e.target.classList.contains('snack')) { updateTotal(); } });
+
+function updateTotal(){
+    let total = 0;
+    selectedSeats.forEach(s => total += s.price);
+    document.querySelectorAll(".snack:checked").forEach(snack => { total += Number(snack.value); });
+    document.getElementById("total").innerText = total;
+}
+
+function openPayment(){ 
+    if(selectedSeats.length === 0) return alert("Machi, seats select pannu!"); 
+    document.getElementById("paymentModal").style.display = "flex"; 
+}
+
+function processPayment(method){
+    alert(method + " Payment Successful!");
+    localStorage.setItem("seats", selectedSeats.map(s => s.id).join(", "));
+    localStorage.setItem("total", document.getElementById("total").innerText);
+    localStorage.setItem("ticketid", "SN" + Math.floor(Math.random() * 1000000));
+    window.location.href = "ticket.html";
+}
+</script>
+</body>
+</html>

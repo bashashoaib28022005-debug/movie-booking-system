@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Ticket | ShoNova</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0A0A0B;
+            color: white;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .ticket {
+            background: #1a1a1c;
+            padding: 30px;
+            border-radius: 15px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(255, 0, 50, 0.4);
+            border: 1px solid #333;
+        }
+        .title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: #FF0032;
+        }
+        .detail {
+            display: flex;
+            justify-content: space-between;
+            margin: 12px 0;
+            font-size: 14px;
+        }
+        .qr-wrapper {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .line {
+            height: 1px;
+            background: #333;
+            margin: 15px 0;
+        }
+        .btn {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background: #FF0032;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="ticket">
+    <div class="title">ShoNova Ticket</div>
+    <div class="line"></div>
+
+    <div class="detail"><span>Movie:</span> <b id="movie"></b></div>
+    <div class="detail"><span>Seats:</span> <b id="seats"></b></div>
+    <div class="detail"><span>Tickets:</span> <b id="count"></b></div>
+    <div class="detail"><span>Show Time:</span> <b id="showtime"></b></div>
+    <div class="detail"><span>Date:</span> <b id="date"></b></div>
+    <div class="detail"><span>Ticket ID:</span> <b id="ticketid"></b></div>
+
+    <div class="line"></div>
+
+    <div class="qr-wrapper">
+        <div id="qrcode"></div>
+    </div>
+    <div style="font-size:12px;color:#aaa;margin-top:10px;">Scan at theatre entrance</div>
+
+    <button class="btn" onclick="window.print()">Download Ticket</button>
+</div>
+
+<script>
+    window.onload = function() {
+        const params = new URLSearchParams(window.location.search);
+        
+        // Ticket ID generation
+        const ticketId = params.get("id") || "SN" + Math.floor(100000 + Math.random() * 900000);
+        
+        // Fetch values from LocalStorage
+        const movie = localStorage.getItem("movie") || "Jailer";
+        const seats = localStorage.getItem("seats") || "75, 76";
+        const showtime = localStorage.getItem("showtime") || "7:30 PM"; 
+
+        // Check if elements exist before setting innerText to avoid errors
+        if(document.getElementById("movie")) document.getElementById("movie").innerText = movie;
+        if(document.getElementById("seats")) document.getElementById("seats").innerText = seats;
+        if(document.getElementById("count")) document.getElementById("count").innerText = seats.split(",").length;
+        if(document.getElementById("showtime")) document.getElementById("showtime").innerText = showtime;
+        if(document.getElementById("date")) document.getElementById("date").innerText = new Date().toLocaleDateString();
+        if(document.getElementById("ticketid")) document.getElementById("ticketid").innerText = ticketId;
+
+        // REAL QR CODE GENERATION LOGIC
+        const qrElement = document.getElementById("qrcode");
+        if(qrElement) {
+            new QRCode(qrElement, {
+                text: ticketId,
+                width: 128,
+                height: 128,
+                colorDark : "#000000",
+                colorLight : "#ffffff"
+            });
+        }
+    };
+</script>
+
+</body>
+</html>

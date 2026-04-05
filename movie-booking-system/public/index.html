@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShoNova | Movies</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<style>
+body{
+    font-family:'Plus Jakarta Sans',sans-serif;
+    background:#0A0A0B;
+    color:white;
+    margin:0;
+    overflow-x: hidden;
+}
+
+/* NAVBAR */
+.navbar{
+    background:#1a1a1c;
+    padding:15px 20px;
+    font-size:20px;
+    font-weight:800;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+/* SEARCH */
+.search-container{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.search-container input{
+    padding:6px 12px;
+    border-radius:20px;
+    border:none;
+    outline:none;
+    font-size:14px;
+}
+
+/* BANNER */
+.banner-container {
+    width: 100%;
+    height: 400px;
+    position: relative;
+    overflow: hidden;
+}
+
+.banner-slider {
+    display: flex;
+    width: 1200%; 
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.banner-slide {
+    width: 8.333%;
+    height: 100%;
+    position: relative;
+}
+
+.banner-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(50%);
+}
+
+.banner-content {
+    position: absolute;
+    bottom: 30px;
+    left: 20px;
+}
+
+.banner-content h1 {
+    font-size: 32px;
+    margin: 0;
+}
+
+/* CONTAINER */
+.container{ padding: 20px; }
+
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.movie-card {
+    background: #1a1a1c;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.movie-card img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+}
+
+.movie-info { padding: 12px; }
+
+.movie-title { 
+    font-weight: 700; 
+}
+
+.movie-lang { 
+    color: #94a3b8; 
+    font-size: 13px; 
+}
+
+.book-btn {
+    margin-top: 10px;
+    display: block;
+    background: #FF0032;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* SOCIAL ICONS */
+.social-icons {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 15px;
+}
+
+.social-icons img {
+    width: 40px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR WITH SEARCH -->
+<div class="navbar">
+
+<div>ShoNova Movies</div>
+
+<div class="search-container">
+<i class="fas fa-search"></i>
+<input type="text" id="searchInput" placeholder="Search movie..." onkeyup="searchMovies()">
+</div>
+
+</div>
+
+
+<!-- BANNER SAME -->
+<div class="banner-container">
+<div class="banner-slider" id="bannerSlider">
+
+<div class="banner-slide">
+<img src="images/couple friendly.jpg">
+<div class="banner-content"><h1>LEO</h1></div>
+</div>
+
+<div class="banner-slide">
+<img src="images/jailer.jpg">
+<div class="banner-content"><h1>JAILER</h1></div>
+</div>
+
+<div class="banner-slide">
+<img src="images/vikram.jpg">
+<div class="banner-content"><h1>VIKRAM</h1></div>
+</div>
+
+<div class="banner-slide">
+<img src="images/goat.jpg">
+<div class="banner-content"><h1>GOAT</h1></div>
+</div>
+
+<div class="banner-slide">
+<img src="images/vada-chennai.jpg">
+<div class="banner-content"><h1>VADA CHENNAI</h1></div>
+</div>
+
+<div class="banner-slide">
+<img src="images/Thangalaan.jpg">
+<div class="banner-content"><h1>THANGALAAN</h1></div>
+</div>
+
+<div class="banner-slide">
+<img src="images/amaran.jpg">
+<div class="banner-content"><h1>AMARAN</h1></div>
+</div>
+
+<div class="banner-slide">
+<img src="images/kanguva.jpg">
+<div class="banner-content"><h1>KANGUVA</h1></div>
+</div>
+
+<div class="banner-slide">
+<img src="images/vidaamuyarchi.jpg">
+<div class="banner-content"><h1>VIDAAMUYARCHI</h1></div>
+</div>
+
+<div class="banner-slide">
+<img src="images/o-romeo.jpg">
+<div class="banner-content"><h1>O ROMEO</h1></div>
+</div>
+
+<div class="banner-slide">
+<img src="images/with love.jpg">
+<div class="banner-content"><h1>WITH LOVE</h1></div>
+</div>
+
+<div class="banner-slide">
+<img src="images/indian2.jpg">
+<div class="banner-content"><h1>INDIAN 2</h1></div>
+</div>
+
+</div>
+</div>
+
+
+<!-- MOVIES LIST SAME -->
+<div class="container">
+
+<h2>தமிழ் Movies & New Releases</h2>
+
+<div class="movie-grid" id="movieGrid">
+
+<!-- ALL YOUR 12 MOVIES SAME -->
+
+<div class="movie-card">
+<img src="images/couple friendly.jpg">
+<div class="movie-info">
+<div class="movie-title">Couple Friendly</div>
+<div class="movie-lang">Tamil • Love</div>
+<a href="booking.html" class="book-btn">Book Now</a>
+</div>
+</div>
+
+<div class="movie-card">
+<img src="images/goodbadugly.jpg">
+<div class="movie-info">
+<div class="movie-title">Good Bad Ugly</div>
+<div class="movie-lang">Tamil • Action</div>
+<a href="booking.html" class="book-btn">Book Now</a>
+</div>
+</div>
+
+<div class="movie-card">
+<img src="images/mylord.jpg">
+<div class="movie-info">
+<div class="movie-title">My Lord</div>
+<div class="movie-lang">Tamil • Romance</div>
+<a href="booking.html" class="book-btn">Book Now</a>
+</div>
+</div>
+
+<div class="movie-card">
+<img src="images/pookie.jpg">
+<div class="movie-info">
+<div class="movie-title">Pookie</div>
+<div class="movie-lang">Tamil • Love</div>
+<a href="booking.html" class="book-btn">Book Now</a>
+</div>
+</div>
+
+<div class="movie-card">
+<img src="images/mydeardolly.jpg">
+<div class="movie-info">
+<div class="movie-title">My Dear Dolly</div>
+<div class="movie-lang">Tamil • Love • Romance</div>
+<a href="booking.html" class="book-btn">Book Now</a>
+</div>
+</div>
+
+<div class="movie-card">
+<img src="images/Thangalaan.jpg">
+<div class="movie-info">
+<div class="movie-title">Thangalaan</div>
+<div class="movie-lang">Tamil • Action</div>
+<a href="booking.html" class="book-btn">Book Now</a>
+</div>
+</div>
+
+<div class="movie-card">
+<img src="images/amaran.jpg">
+<div class="movie-info">
+<div class="movie-title">Amaran</div>
+<div class="movie-lang">Tamil • Action</div>
+<a href="booking.html" class="book-btn">Book Now</a>
+</div>
+</div>
+
+<div class="movie-card">
+<img src="images/kanguva.jpg">
+<div class="movie-info">
+<div class="movie-title">Kanguva</div>
+<div class="movie-lang">Tamil • Upcoming</div>
+<a href="booking.html" class="book-btn">Book Now</a>
+</div>
+</div>
+
+<div class="movie-card">
+<img src="images/vidaamuyarchi.jpg">
+<div class="movie-info">
+<div class="movie-title">Vidaamuyarchi</div>
+<div class="movie-lang">Tamil • Upcoming</div>
+<a href="booking.html" class="book-btn">Book Now</a>
+</div>
+</div>
+
+<div class="movie-card">
+<img src="images/o-romeo.jpg">
+<div class="movie-info">
+<div class="movie-title">O Romeo</div>
+<div class="movie-lang">Tamil • Action</div>
+<a href="booking.html" class="book-btn">Book Now</a>
+</div>
+</div>
+
+<div class="movie-card">
+<img src="images/with love.jpg">
+<div class="movie-info">
+<div class="movie-title">With Love</div>
+<div class="movie-lang">Tamil • Romance</div>
+<a href="booking.html" class="book-btn">Book Now</a>
+</div>
+</div>
+
+<div class="movie-card">
+<img src="images/indian2.jpg">
+<div class="movie-info">
+<div class="movie-title">Indian 2</div>
+<div class="movie-lang">Tamil • Upcoming</div>
+<a href="booking.html" class="book-btn">Book Now</a>
+</div>
+</div>
+
+</div>
+</div>
+
+
+<!-- SOCIAL SAME -->
+<div class="social-icons">
+
+<a href="https://www.instagram.com/" target="_blank">
+<img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png">
+</a>
+
+<a href="https://www.linkedin.com/" target="_blank">
+<img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png">
+</a>
+
+</div>
+
+
+<script>
+
+// SEARCH FUNCTION
+function searchMovies(){
+
+let input=document.getElementById("searchInput").value.toLowerCase();
+
+let cards=document.querySelectorAll(".movie-card");
+
+cards.forEach(card=>{
+
+let title=card.querySelector(".movie-title").innerText.toLowerCase();
+
+if(title.includes(input)){
+card.style.display="block";
+}
+else{
+card.style.display="none";
+}
+
+});
+
+}
+
+
+// BANNER SLIDER SAME
+let currentIndex = 0;
+const slides = document.querySelectorAll('.banner-slide');
+const slider = document.getElementById('bannerSlider');
+
+function slideBanner(){
+
+currentIndex++;
+
+if(currentIndex>=slides.length){
+currentIndex=0;
+}
+
+const translateValue = -(currentIndex*(100/slides.length));
+
+slider.style.transform=`translateX(${translateValue}%)`;
+
+}
+
+setInterval(slideBanner,5000);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,110 @@
+<script>
+async function checkLogin(){
+
+const res = await fetch("/me");
+const data = await res.json();
+
+if(!data.user){
+alert("Please login first");
+window.location="login.html";
+}
+
+}
+
+checkLogin();
+</script>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Select Theatre | ShoNova</title>
+<style>
+body{ font-family:'Plus Jakarta Sans',sans-serif; background:#0A0A0B; color:white; margin:0; }
+.navbar{ background:#1a1a1c; padding:15px 30px; font-size:22px; font-weight:800; border-bottom: 1px solid #333; }
+.container{ padding:30px; text-align:center; }
+.date-selector { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; overflow-x: auto; padding: 10px; }
+.date-card { min-width: 70px; padding: 12px; background: #1a1a1c; border: 1px solid #333; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+.date-card:hover { border-color: #FF0032; }
+.date-card.selected { background: #FF0032; border-color: #FF0032; }
+.date-day { font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
+.date-num { font-size: 18px; font-weight: 800; }
+.theatre-row { background: #151516; border-radius: 15px; padding: 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #222; max-width: 1000px; margin-left: auto; margin-right: auto; }
+.theatre-info { text-align: left; flex: 1; }
+.theatre-name { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 5px; }
+.theatre-location { font-size: 12px; color: #94a3b8; }
+.timing-container { display: flex; gap: 12px; flex-wrap: wrap; flex: 2; justify-content: flex-end; }
+.time-btn { padding: 10px 20px; background: transparent; border: 1px solid #444; color: #00ff84; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+.time-btn:hover { background: rgba(0, 255, 132, 0.1); border-color: #00ff84; }
+@media (max-width: 768px) { .theatre-row { flex-direction: column; } .timing-container { justify-content: center; margin-top: 10px; } }
+</style>
+</head>
+<body>
+<div class="navbar">ShoNova Booking</div>
+<div class="container">
+    <h2 id="movie-name" style="font-size: 32px; margin-bottom: 15px;"></h2>
+    <div class="date-selector" id="dateSelector"></div>
+    <div id="theatre-list"></div>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const movie = params.get("movie") || "Demo Movie";
+document.getElementById("movie-name").innerText = movie.charAt(0).toUpperCase() + movie.slice(1);
+
+const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+let selectedDate = "";
+for (let i = 0; i < 7; i++) {
+    const d = new Date(); d.setDate(d.getDate() + i);
+    const fullDate = d.toDateString();
+    const dateCard = document.createElement("div");
+    dateCard.className = "date-card" + (i===0 ? " selected":"");
+    if(i===0) selectedDate = fullDate;
+    dateCard.innerHTML = `<div class="date-day">${days[d.getDay()]}</div><div class="date-num">${d.getDate()}</div>`;
+    dateCard.onclick = () => {
+        document.querySelectorAll(".date-card").forEach(c => c.classList.remove("selected"));
+        dateCard.classList.add("selected"); selectedDate = fullDate;
+    };
+    document.getElementById("dateSelector").appendChild(dateCard);
+}
+
+const theatres = [
+    { name: "Sathyam Cinemas (SPI)", loc: "Royapettah", times: ["10:30 AM", "02:15 PM", "06:45 PM", "10:30 PM"] },
+    { name: "Devi Cineplex", loc: "Mount Road", times: ["11:00 AM", "02:30 PM", "06:15 PM", "10:00 PM"] },
+    { name: "Rohini Silver Screens", loc: "Koyambedu", times: ["09:00 AM", "12:15 PM", "03:30 PM", "07:00 PM", "10:45 PM"] },
+    { name: "Abirami Multiplex", loc: "Purasaiwakkam", times: ["10:45 AM", "02:00 PM", "06:30 PM", "10:15 PM"] },
+    { name: "AGS Cinemas", loc: "T. Nagar", times: ["10:00 AM", "01:15 PM", "04:30 PM", "07:45 PM", "11:00 PM"] },
+    { name: "PVR: VR Chennai", loc: "Anna Nagar", times: ["09:30 AM", "12:45 PM", "04:00 PM", "07:15 PM", "10:30 PM"] },
+    { name: "Kamala Cinemas", loc: "Vadapalani", times: ["10:15 AM", "02:15 PM", "06:15 PM", "10:15 PM"] },
+    { name: "Vetri Cinemas", loc: "Chromepet", times: ["10:30 AM", "06:30 PM", "10:30 PM"] },
+    { name: "GK Cinemas", loc: "Porur", times: ["11:15 AM", "02:45 PM", "06:45 PM", "10:00 PM"] },
+    { name: "Udhayam Complex", loc: "Ashok Nagar", times: ["10:00 AM", "01:30 PM", "05:00 PM", "08:30 PM"] },
+    { name: "Kasi Theatre", loc: "Jafferkhanpet", times: ["10:45 AM", "02:45 PM", "06:45 PM", "10:45 PM"] },
+    { name: "Woodlands Theatre", loc: "Royapettah", times: ["10:00 AM", "01:30 PM", "06:30 PM", "10:00 PM"] },
+    { name: "Albert Theatre", loc: "Egmore", times: ["11:00 AM", "02:30 PM", "06:30 PM", "10:00 PM"] },
+    { name: "Luxe Cinemas", loc: "Velachery", times: ["09:45 AM", "12:45 PM", "04:00 PM", "07:15 PM", "10:30 PM"] },
+    { name: "Sangam Cinemas", loc: "Kilpauk", times: ["10:30 AM", "02:15 PM", "06:45 PM", "10:30 PM"] },
+    { name: "Ganapathi Ram Theatre", loc: "Adyar", times: ["10:15 AM", "01:45 PM", "06:15 PM", "10:15 PM"] },
+    { name: "EGA Cinemas", loc: "Kilpauk", times: ["12:00 PM", "03:30 PM", "07:00 PM", "10:30 PM"] },
+    { name: "PVR Heritage RSL", loc: "ECR", times: ["10:00 AM", "01:15 PM", "04:30 PM", "07:45 PM", "11:15 PM"] },
+    { name: "Anna Theatre", loc: "Mount Road", times: ["11:30 AM", "02:45 PM", "06:15 PM", "10:00 PM"] },
+    { name: "Vettri Theatres", loc: "Chromepet", times: ["10:45 AM", "02:30 PM", "06:45 PM", "11:00 PM"] }
+];
+
+theatres.forEach(t => {
+    const row = document.createElement("div");
+    row.className = "theatre-row";
+    row.innerHTML = `<div class="theatre-info"><div class="theatre-name">${t.name}</div><div class="theatre-location">${t.loc}</div></div>
+    <div class="timing-container">${t.times.map(time => `<button class="time-btn" onclick="goToSeats('${t.name}', '${time}')">${time}</button>`).join('')}</div>`;
+    document.getElementById("theatre-list").appendChild(row);
+});
+
+function goToSeats(theatre, time) {
+    localStorage.setItem("movie", movie);
+    localStorage.setItem("date", selectedDate);
+    localStorage.setItem("theatre", theatre);
+    localStorage.setItem("showtime", time);
+    window.location.href = "seats.html"; // Jumps to next page
+}
+</script>
+</body>
+</html>
